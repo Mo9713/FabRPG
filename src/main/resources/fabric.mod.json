@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "fabrpg",
+  "version": "${version}",
+  "name": "FabRPG",
+  "description": "A port of customjacks & AdvanceWipe original FreeRPG plugin - Made from Spite",
+  "authors": [
+    "MoBlasing",
+    "JackCarlton",
+    "AdvancedWipe"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/fabrpg/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "mc.blasing.fabrpg.client.FabrpgClient"
+    ],
+    "main": [
+      "mc.blasing.fabrpg.Fabrpg"
+    ]
+  },
+  "mixins": [
+    "fabrpg.mixins.json",
+    {
+      "config": "fabrpg.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
