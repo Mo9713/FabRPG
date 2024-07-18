@@ -23,3 +23,5 @@ public class FabrpgClient implements ClientModInitializer {
         );
     }
 }
+
+//fix errors

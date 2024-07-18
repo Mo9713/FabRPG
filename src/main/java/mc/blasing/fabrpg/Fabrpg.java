@@ -51,8 +51,8 @@ public class Fabrpg implements ModInitializer {
     }
 
     private void registerCommands() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            SkillTreeCommand.register(dispatcher);
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                SkillTreeCommand.register(dispatcher)
+        );
     }
 }
