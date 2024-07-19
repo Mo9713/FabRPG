@@ -19,7 +19,7 @@ public class PlayerSkillData {
         SkillTree skillTree = unlockedNodes.computeIfAbsent(skillId, k -> new SkillTree(skillId));
         SkillTreeNode node = skillTree.getNode(nodeId);
         if (node != null) {
-            node.setUnlocked(true);
+            node.unlock();
         }
     }
 

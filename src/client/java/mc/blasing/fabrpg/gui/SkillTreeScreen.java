@@ -6,6 +6,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import mc.blasing.fabrpg.skills.SkillTree;
 import mc.blasing.fabrpg.skills.SkillTreeNode;
+import mc.blasing.fabrpg.skills.unlock.UnlockCondition;
+import mc.blasing.fabrpg.skills.unlock.PrerequisiteUnlockCondition;
 import net.minecraft.util.Identifier;
 
 public class SkillTreeScreen extends Screen {
@@ -29,7 +31,6 @@ public class SkillTreeScreen extends Screen {
             int y = 50 + node.getY() * NODE_SPACING - NODE_SIZE / 2;
 
             this.addDrawableChild(ButtonWidget.builder(Text.literal(node.getAbility().getName()), button -> {
-                // Handle node click
                 if (canUnlockNode(node)) {
                     unlockNode(node);
                 }
@@ -44,36 +45,11 @@ public class SkillTreeScreen extends Screen {
 
         // Draw lines between connected nodes
         for (SkillTreeNode node : skillTree.getNodes()) {
-            for (String prereqId : node.getPrerequisites()) {
-                SkillTreeNode prereq = skillTree.getNode(prereqId);
-                if (prereq != null) {
-                    int startX = this.width / 2 + prereq.getX() * NODE_SPACING;
-                    int startY = 50 + prereq.getY() * NODE_SPACING;
-                    int endX = this.width / 2 + node.getX() * NODE_SPACING;
-                    int endY = 50 + node.getY() * NODE_SPACING;
-
-                    // Draw a line using fill method
-                    if (startX == endX) {
-                        // Vertical line
-                        context.fill(startX, startY, startX + 1, endY, 0xFFFFFFFF);
-                    } else if (startY == endY) {
-                        // Horizontal line
-                        context.fill(startX, startY, endX, startY + 1, 0xFFFFFFFF);
-                    } else {
-                        // Diagonal line (approximation)
-                        int dx = Math.abs(endX - startX);
-                        int dy = Math.abs(endY - startY);
-                        int sx = startX < endX ? 1 : -1;
-                        int sy = startY < endY ? 1 : -1;
-                        int err = dx - dy;
-
-                        while (true) {
-                            context.fill(startX, startY, startX + 1, startY + 1, 0xFFFFFFFF);
-                            if (startX == endX && startY == endY) break;
-                            int e2 = 2 * err;
-                            if (e2 > -dy) { err -= dy; startX += sx; }
-                            if (e2 < dx) { err += dx; startY += sy; }
-                        }
+            for (UnlockCondition condition : node.getUnlockConditions()) {
+                if (condition instanceof PrerequisiteUnlockCondition prereq) {
+                    SkillTreeNode prereqNode = skillTree.getNode(prereq.getPrerequisiteSkillId());
+                    if (prereqNode != null) {
+                        drawLineBetweenNodes(context, prereqNode, node);
                     }
                 }
             }
@@ -96,6 +72,40 @@ public class SkillTreeScreen extends Screen {
         }
     }
 
+    private void drawLineBetweenNodes(DrawContext context, SkillTreeNode start, SkillTreeNode end) {
+        int startX = this.width / 2 + start.getX() * NODE_SPACING;
+        int startY = 50 + start.getY() * NODE_SPACING;
+        int endX = this.width / 2 + end.getX() * NODE_SPACING;
+        int endY = 50 + end.getY() * NODE_SPACING;
+
+        if (startX == endX) {
+            // Vertical line
+            context.fill(startX, Math.min(startY, endY), startX + 1, Math.max(startY, endY), 0xFFFFFFFF);
+        } else if (startY == endY) {
+            // Horizontal line
+            context.fill(Math.min(startX, endX), startY, Math.max(startX, endX), startY + 1, 0xFFFFFFFF);
+        } else {
+            // Diagonal line
+            drawDiagonalLine(context, startX, startY, endX, endY);
+        }
+    }
+
+    private void drawDiagonalLine(DrawContext context, int startX, int startY, int endX, int endY) {
+        int dx = Math.abs(endX - startX);
+        int dy = Math.abs(endY - startY);
+        int sx = startX < endX ? 1 : -1;
+        int sy = startY < endY ? 1 : -1;
+        int err = dx - dy;
+
+        while (true) {
+            context.fill(startX, startY, startX + 1, startY + 1, 0xFFFFFFFF);
+            if (startX == endX && startY == endY) break;
+            int e2 = 2 * err;
+            if (e2 > -dy) { err -= dy; startX += sx; }
+            if (e2 < dx) { err += dx; startY += sy; }
+        }
+    }
+
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderBackground(context, mouseX, mouseY, delta);
@@ -105,24 +115,16 @@ public class SkillTreeScreen extends Screen {
     }
 
     private boolean canUnlockNode(SkillTreeNode node) {
-        // Check if all prerequisites are unlocked
-        for (String prereqId : node.getPrerequisites()) {
-            SkillTreeNode prereq = skillTree.getNode(prereqId);
-            if (prereq == null || !prereq.isUnlocked()) {
-                return false;
-            }
+        if (this.client != null && this.client.player != null) {
+            return node.canUnlock(this.client.player);
         }
-        // Check if the player has enough skill points
-        // This is a placeholder, replace with actual skill point logic
-        return true;
+        return false;
     }
 
     private void unlockNode(SkillTreeNode node) {
         if (canUnlockNode(node)) {
-            node.setUnlocked(true);
-            // Deduct skill points
-            // Apply the ability effect
-            // Update the player's skill data
+            node.unlock();
+            // TODO: Implement logic for skill point deduction and ability effect application
         }
     }
 

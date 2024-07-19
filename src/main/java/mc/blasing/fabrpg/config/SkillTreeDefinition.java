@@ -1,6 +1,9 @@
 package mc.blasing.fabrpg.config;
 
+import mc.blasing.fabrpg.skills.unlock.UnlockCondition;
+
 import java.util.List;
+import java.util.ArrayList;
 
 public class SkillTreeDefinition {
     private String skillId;
@@ -11,7 +14,7 @@ public class SkillTreeDefinition {
     }
 
     public List<NodeDefinition> getNodes() {
-        return nodes;
+        return new ArrayList<>(nodes);
     }
 
     public static class NodeDefinition {
@@ -19,7 +22,7 @@ public class SkillTreeDefinition {
         private String abilityId;
         private int x;
         private int y;
-        private List<String> prerequisites;
+        private List<UnlockCondition> unlockConditions;
 
         public String getId() {
             return id;
@@ -37,8 +40,8 @@ public class SkillTreeDefinition {
             return y;
         }
 
-        public List<String> getPrerequisites() {
-            return prerequisites;
+        public List<UnlockCondition> getUnlockConditions() {
+            return new ArrayList<>(unlockConditions);
         }
     }
 }

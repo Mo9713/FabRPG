@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import mc.blasing.fabrpg.Fabrpg;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -111,4 +112,10 @@ public class SkillManager {
     public static Map<String, Skill> getPlayerSkills(ServerPlayerEntity player) {
         return new HashMap<>(playerSkills.getOrDefault(player, new HashMap<>()));
     }
+
+    public static boolean isSkillUnlocked(PlayerEntity player, String skillId) {
+        // Implement logic to check if the skill is unlocked
+        return false; // Placeholder
+    }
 }
+

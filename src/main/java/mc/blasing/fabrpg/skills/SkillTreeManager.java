@@ -1,8 +1,10 @@
 package mc.blasing.fabrpg.skills;
 
 import mc.blasing.fabrpg.config.SkillTreeDefinition;
+import mc.blasing.fabrpg.skills.unlock.UnlockCondition;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SkillTreeManager {
     private static final Map<String, SkillTree> skillTrees = new HashMap<>();
@@ -16,7 +18,7 @@ public class SkillTreeManager {
                         AbilityManager.getAbility(nodeDefinition.getAbilityId()),
                         nodeDefinition.getX(),
                         nodeDefinition.getY(),
-                        nodeDefinition.getPrerequisites()
+                        nodeDefinition.getUnlockConditions()
                 );
                 skillTree.addNode(node);
             }
