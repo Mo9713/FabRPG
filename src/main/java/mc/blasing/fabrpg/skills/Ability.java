@@ -3,10 +3,10 @@ package mc.blasing.fabrpg.skills;
 import java.util.Map;
 
 public class Ability {
-    private String id;
-    private String name;
-    private String description;
-    private int requiredLevel;
+    private String id; public String getId() { return id; }
+    private String name; public String getName() { return name; }
+    private String description; public String getDescription() { return description; }
+    private int requiredLevel; public int getRequiredLevel() { return requiredLevel; }
     private int x;
     private int y;
 
@@ -25,9 +25,4 @@ public class Ability {
     public void activate(Skill skill, Map<String, Object> context) {
         // Implement ability activation here
     }
-
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public int getRequiredLevel() { return requiredLevel; }
 }

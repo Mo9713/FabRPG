@@ -1,8 +1,10 @@
 package mc.blasing.fabrpg;
 
 import mc.blasing.fabrpg.commands.SkillTreeCommand;
+import mc.blasing.fabrpg.commands.SkillCommand;
 import mc.blasing.fabrpg.config.ConfigManager;
 import mc.blasing.fabrpg.skills.SkillManager;
+import mc.blasing.fabrpg.events.SkillEventListener;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -32,6 +34,9 @@ public class Fabrpg implements ModInitializer {
         // Register commands
         registerCommands();
 
+        // Register skill event listeners
+        registerSkillEvents();
+
         LOGGER.info("FabRPG initialization complete");
     }
 
@@ -51,8 +56,13 @@ public class Fabrpg implements ModInitializer {
     }
 
     private void registerCommands() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-                SkillTreeCommand.register(dispatcher)
-        );
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            SkillTreeCommand.register(dispatcher);
+            SkillCommand.register(dispatcher);
+        });
+    }
+
+    private void registerSkillEvents() {
+        SkillEventListener.register();
     }
 }

@@ -1,4 +1,4 @@
-package mc.blasing.fabrpg.gui;
+package mc.blasing.fabrpg.client.gui;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
