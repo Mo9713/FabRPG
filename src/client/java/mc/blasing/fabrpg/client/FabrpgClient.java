@@ -2,30 +2,43 @@ package mc.blasing.fabrpg.client;
 
 import mc.blasing.fabrpg.Fabrpg;
 import mc.blasing.fabrpg.client.gui.SkillTreeScreen;
-import mc.blasing.fabrpg.skills.SkillTreeManager;
+import mc.blasing.fabrpg.skills.SkillTree;
+import mc.blasing.fabrpg.skills.SkillManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.codec.PacketCodec;
 
 public class FabrpgClient implements ClientModInitializer {
-    private static final Identifier OPEN_SKILL_TREE_PACKET_ID = Identifier.of(Fabrpg.MOD_ID, "open_skill_tree");
+    public static final CustomPayload.Id<OpenSkillTreePayload> OPEN_SKILL_TREE_PACKET_ID = new CustomPayload.Id<>(Identifier.of(Fabrpg.MOD_ID, "open_skill_tree"));
 
     @Override
     public void onInitializeClient() {
-        // Register client-side packet handler
-        ClientPlayNetworking.registerGlobalReceiver(OPEN_SKILL_TREE_PACKET_ID, (client, handler, buf, responseSender) -> {
-            // Read packet data on the network thread
+        ClientPlayNetworking.registerGlobalReceiver(OPEN_SKILL_TREE_PACKET_ID, (payload, context) ->
+                context.client().execute(this::openSkillTreeScreen)
+        );
+    }
 
-            String skillTreeId = buf.readUtf(32767);
+    private void openSkillTreeScreen() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        SkillTree skillTree = SkillManager.getClientSkillTree();
+        client.setScreen(new SkillTreeScreen(client.currentScreen, skillTree));
+    }
 
-            // Schedule the task to run on the main client thread
-            MinecraftClient.getInstance().execute(() -> {
-                // This lambda is run on the render thread
-                if (MinecraftClient.getInstance().player != null) {
-                    MinecraftClient.getInstance().setScreen(new SkillTreeScreen(MinecraftClient.getInstance().currentScreen, SkillTreeManager.getSkillTree(skillTreeId)));
-                }
-            });
-        });
+    public static class OpenSkillTreePayload implements CustomPayload {
+        public static final OpenSkillTreePayload INSTANCE = new OpenSkillTreePayload();
+
+        private OpenSkillTreePayload() {}
+
+        @SuppressWarnings("unused")
+        public static final PacketCodec<PacketByteBuf, OpenSkillTreePayload> CODEC = PacketCodec.unit(() -> INSTANCE);
+
+        @Override
+        public CustomPayload.Id<? extends CustomPayload> getId() {
+            return OPEN_SKILL_TREE_PACKET_ID;
+        }
     }
 }

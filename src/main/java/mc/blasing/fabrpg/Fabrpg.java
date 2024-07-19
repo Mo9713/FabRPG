@@ -37,6 +37,10 @@ public class Fabrpg implements ModInitializer {
         // Register skill event listeners
         registerSkillEvents();
 
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            SkillTreeCommand.register(dispatcher);
+        });
+
         LOGGER.info("FabRPG initialization complete");
     }
 

@@ -24,7 +24,19 @@ public class SkillManager {
     private static final Gson GSON = new Gson();
     private static final Map<String, SkillDefinition> skillDefinitions = new HashMap<>();
     private static final Map<ServerPlayerEntity, Map<String, Skill>> playerSkills = new HashMap<>();
+    private static SkillTree clientSkillTree;
 
+    public static void setClientSkillTree(SkillTree skillTree) {
+        clientSkillTree = skillTree;
+    }
+
+    public static SkillTree getClientSkillTree() {
+        if (clientSkillTree == null) {
+            // Initialize with a default skill tree if none has been set
+            clientSkillTree = new SkillTree("default");
+        }
+        return clientSkillTree;
+    }
     public static void initialize() {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
@@ -114,8 +126,11 @@ public class SkillManager {
     }
 
     public static boolean isSkillUnlocked(PlayerEntity player, String skillId) {
-        // Implement logic to check if the skill is unlocked
-        return false; // Placeholder
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            Skill skill = getOrCreateSkill(serverPlayer, skillId);
+            return skill.getLevel() > 0; // Consider a skill unlocked if its level is greater than 0
+        }
+        return false;
     }
 }
 
