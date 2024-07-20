@@ -1,4 +1,4 @@
-package mc.blasing.fabrpg.skills;
+package mc.blasing.fabrpg.skills.experience;
 
 public class DefaultExperienceCalculator implements ExperienceCalculator {
     private static final double EXPONENTIAL_GROWTH_FACTOR = 1.00282543;

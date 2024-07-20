@@ -1,5 +1,7 @@
-package mc.blasing.fabrpg.skills;
+package mc.blasing.fabrpg.skills.player;
 
+import mc.blasing.fabrpg.skills.Skill;
+import mc.blasing.fabrpg.skills.SkillManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;

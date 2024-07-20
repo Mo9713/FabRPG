@@ -1,6 +1,7 @@
-package mc.blasing.fabrpg.skills;
+package mc.blasing.fabrpg.skills.types;
 
 import mc.blasing.fabrpg.Fabrpg;
+import mc.blasing.fabrpg.skills.CustomSkill;
 import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.Map;
 

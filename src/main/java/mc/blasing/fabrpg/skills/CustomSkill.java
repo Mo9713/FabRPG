@@ -1,6 +1,8 @@
 package mc.blasing.fabrpg.skills;
 
 import mc.blasing.fabrpg.Fabrpg;
+import mc.blasing.fabrpg.skills.abilities.Ability;
+import mc.blasing.fabrpg.skills.actions.Action;
 import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.Map;
 import java.util.HashMap;

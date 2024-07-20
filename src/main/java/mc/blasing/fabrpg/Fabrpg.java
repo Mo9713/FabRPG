@@ -21,7 +21,7 @@ public class Fabrpg implements ModInitializer {
         LOGGER.info("Initializing FabRPG");
 
         // Load configuration
-        ConfigManager.loadConfig();
+        ConfigManager.loadAll();
 
         // Initialize SkillManager
         SkillManager.initialize();
@@ -49,7 +49,7 @@ public class Fabrpg implements ModInitializer {
 
     private void onServerStopping(MinecraftServer server) {
         // Perform any necessary cleanup when the server is stopping
-        ConfigManager.loadConfig(); // This will save the config if needed
+        ConfigManager.loadAll(); // This will save the config if needed
     }
 
     private void registerCommands() {

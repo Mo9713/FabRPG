@@ -1,5 +1,6 @@
-package mc.blasing.fabrpg.skills;
+package mc.blasing.fabrpg.skills.types;
 
+import mc.blasing.fabrpg.skills.CustomSkill;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CombatSkill extends CustomSkill {

@@ -1,4 +1,4 @@
-package mc.blasing.fabrpg.skills;
+package mc.blasing.fabrpg.skills.abilities;
 
 import java.util.HashMap;
 import java.util.Map;

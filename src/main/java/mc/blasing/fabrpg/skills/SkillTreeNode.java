@@ -1,8 +1,8 @@
 package mc.blasing.fabrpg.skills;
 
+import mc.blasing.fabrpg.skills.abilities.Ability;
 import mc.blasing.fabrpg.skills.unlock.UnlockCondition;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
 import java.util.ArrayList;

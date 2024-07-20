@@ -1,19 +1,14 @@
 package mc.blasing.fabrpg.events;
 
-import mc.blasing.fabrpg.Fabrpg;
-import mc.blasing.fabrpg.skills.CombatSkill;
+import mc.blasing.fabrpg.skills.types.CombatSkill;
 import mc.blasing.fabrpg.skills.Skill;
 import mc.blasing.fabrpg.skills.SkillManager;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.world.World;
 
 import java.util.HashMap;
 import java.util.Map;

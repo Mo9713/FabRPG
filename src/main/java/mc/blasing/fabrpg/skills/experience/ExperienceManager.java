@@ -1,4 +1,4 @@
-package mc.blasing.fabrpg.skills;
+package mc.blasing.fabrpg.skills.experience;
 
 public class ExperienceManager {
     public static int calculateExperienceForLevel(int level) {
