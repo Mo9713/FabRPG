@@ -51,4 +51,12 @@ public class ConfigManager {
             }
         }
     }
+
+    public static Gson getGson() {
+        return GSON;
+    }
+
+    public static Path getConfigDir() {
+        return CONFIG_DIR;
+    }
 }

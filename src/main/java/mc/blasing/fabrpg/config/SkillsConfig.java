@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkillsConfig {
-    private static final Path CONFIG_PATH = ConfigManager.CONFIG_DIR.resolve("skills.json");
-    private static final Path SKILL_TREES_PATH = ConfigManager.CONFIG_DIR.resolve("skill_trees.json");
+    private static final Path CONFIG_PATH = ConfigManager.getConfigDir().resolve("skills.json");
+    private static final Path SKILL_TREES_PATH = ConfigManager.getConfigDir().resolve("skill_trees.json");
 
     public List<SkillDefinition> skills = new ArrayList<>();
 
@@ -24,7 +24,7 @@ public class SkillsConfig {
 
         if (Files.exists(CONFIG_PATH)) {
             try {
-                config = ConfigManager.GSON.fromJson(Files.newBufferedReader(CONFIG_PATH), SkillsConfig.class);
+                config = ConfigManager.getGson().fromJson(Files.newBufferedReader(CONFIG_PATH), SkillsConfig.class);
             } catch (IOException e) {
                 Fabrpg.LOGGER.error("Error loading skills config file", e);
                 config = new SkillsConfig();
@@ -46,7 +46,7 @@ public class SkillsConfig {
 
     public void save() {
         try {
-            Files.writeString(CONFIG_PATH, ConfigManager.GSON.toJson(this));
+            Files.writeString(CONFIG_PATH, ConfigManager.getGson().toJson(this));
         } catch (IOException e) {
             Fabrpg.LOGGER.error("Error saving skills config file", e);
         }
@@ -55,7 +55,7 @@ public class SkillsConfig {
     private void loadSkillTrees() {
         try {
             String json = Files.readString(SKILL_TREES_PATH);
-            SkillTreeDefinition[] definitions = ConfigManager.GSON.fromJson(json, SkillTreeDefinition[].class);
+            SkillTreeDefinition[] definitions = ConfigManager.getGson().fromJson(json, SkillTreeDefinition[].class);
             SkillTreeManager.loadSkillTrees(definitions);
         } catch (IOException e) {
             Fabrpg.LOGGER.error("Failed to load skill trees", e);
