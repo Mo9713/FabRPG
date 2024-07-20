@@ -16,8 +16,6 @@ public class Fabrpg implements ModInitializer {
     public static final String MOD_ID = "fabrpg";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    private MinecraftServer server;
-
     @Override
     public void onInitialize() {
         LOGGER.info("Initializing FabRPG");
@@ -37,10 +35,6 @@ public class Fabrpg implements ModInitializer {
         // Register skill event listeners
         registerSkillEvents();
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            SkillTreeCommand.register(dispatcher);
-        });
-
         LOGGER.info("FabRPG initialization complete");
     }
 
@@ -50,7 +44,6 @@ public class Fabrpg implements ModInitializer {
     }
 
     private void onServerStarting(MinecraftServer server) {
-        this.server = server;
         // Perform any necessary actions when the server is starting
     }
 
