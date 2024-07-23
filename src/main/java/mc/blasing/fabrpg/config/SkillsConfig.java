@@ -1,36 +1,39 @@
 package mc.blasing.fabrpg.config;
 
+import com.google.gson.reflect.TypeToken;
 import mc.blasing.fabrpg.Fabrpg;
 import mc.blasing.fabrpg.skills.SkillDefinition;
+import mc.blasing.fabrpg.skills.SkillTreeDefinition;
 import mc.blasing.fabrpg.skills.SkillTreeManager;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 public class SkillsConfig {
     private static final Path CONFIG_PATH = ConfigManager.getConfigDir().resolve("skills.json");
     private static final Path SKILL_TREES_PATH = ConfigManager.getConfigDir().resolve("skill_trees.json");
 
-    public List<SkillDefinition> skills = new ArrayList<>();
+    private Map<String, SkillDefinition> skills;
 
     public static SkillsConfig load() {
-        SkillsConfig config;
+        SkillsConfig config = new SkillsConfig();
 
-        ConfigManager.ensureConfigFile("skills.json", "data/skills.json");
-        ConfigManager.ensureConfigFile("skill_trees.json", "data/skill_trees.json");
+        ConfigManager.ensureConfigFile("skills.json", "{ \"mining\": { \"name\": \"Mining\", \"actions\": [], \"abilities\": [] } }");
+        ConfigManager.ensureConfigFile("skill_trees.json", "[]");
 
         if (Files.exists(CONFIG_PATH)) {
             try {
-                config = ConfigManager.getGson().fromJson(Files.newBufferedReader(CONFIG_PATH), SkillsConfig.class);
+                String json = Files.readString(CONFIG_PATH);
+                Type type = new TypeToken<Map<String, SkillDefinition>>() {}.getType();
+                config.skills = ConfigManager.getGson().fromJson(json, type);
             } catch (IOException e) {
                 Fabrpg.LOGGER.error("Error loading skills config file", e);
-                config = new SkillsConfig();
+                config.setDefaults();
             }
         } else {
-            config = new SkillsConfig();
             config.setDefaults();
         }
 
@@ -40,13 +43,15 @@ public class SkillsConfig {
     }
 
     private void setDefaults() {
-        skills.add(new SkillDefinition("mining", "Mining", 100, "Increases mining speed and ore drops"));
-        skills.add(new SkillDefinition("woodcutting", "Woodcutting", 100, "Increases wood cutting speed and log drops"));
+        // Define default skills here
+        skills.put("mining", new SkillDefinition("mining", "Mining", 100, "Increases mining speed and ore drops"));
+        skills.put("woodcutting", new SkillDefinition("woodcutting", "Woodcutting", 100, "Increases wood cutting speed and log drops"));
     }
 
     public void save() {
         try {
-            Files.writeString(CONFIG_PATH, ConfigManager.getGson().toJson(this));
+            String json = ConfigManager.getGson().toJson(skills);
+            Files.writeString(CONFIG_PATH, json);
         } catch (IOException e) {
             Fabrpg.LOGGER.error("Error saving skills config file", e);
         }

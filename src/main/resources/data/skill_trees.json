@@ -1,61 +1,73 @@
-[
-  {
-    "skillId": "mining",
-    "nodes": [
-      {
-        "id": "basic_mining",
-        "abilityId": "mining_efficiency_1",
-        "x": 0,
-        "y": 0,
-        "prerequisites": []
-      },
-      {
-        "id": "advanced_mining",
-        "abilityId": "mining_efficiency_2",
-        "x": 0,
-        "y": 1,
-        "prerequisites": ["basic_mining"]
-      },
-      {
-        "id": "ore_sense",
-        "abilityId": "ore_detector",
-        "x": 1,
-        "y": 1,
-        "prerequisites": ["basic_mining"]
-      },
-      {
-        "id": "expert_mining",
-        "abilityId": "mining_efficiency_3",
-        "x": 0,
-        "y": 2,
-        "prerequisites": ["advanced_mining"]
-      }
-    ]
-  },
-  {
-    "skillId": "woodcutting",
-    "nodes": [
-      {
-        "id": "basic_woodcutting",
-        "abilityId": "woodcutting_efficiency_1",
-        "x": 0,
-        "y": 0,
-        "prerequisites": []
-      },
-      {
-        "id": "tree_feller",
-        "abilityId": "tree_feller_ability",
-        "x": 0,
-        "y": 1,
-        "prerequisites": ["basic_woodcutting"]
-      },
-      {
-        "id": "leaf_blower",
-        "abilityId": "leaf_blower_ability",
-        "x": 1,
-        "y": 1,
-        "prerequisites": ["basic_woodcutting"]
-      }
-    ]
-  }
-]
+{
+  "skillTrees": [
+    {
+      "skillId": "mining",
+      "nodes": [
+        {
+          "id": "basic_mining",
+          "abilityId": "mining_efficiency_1",
+          "x": 0,
+          "y": 0,
+          "prerequisites": []
+        },
+        {
+          "id": "advanced_mining",
+          "abilityId": "mining_efficiency_2",
+          "x": 0,
+          "y": 1,
+          "prerequisites": [
+            "basic_mining"
+          ]
+        },
+        {
+          "id": "ore_sense",
+          "abilityId": "ore_detector",
+          "x": 1,
+          "y": 1,
+          "prerequisites": [
+            "basic_mining"
+          ]
+        },
+        {
+          "id": "expert_mining",
+          "abilityId": "mining_efficiency_3",
+          "x": 0,
+          "y": 2,
+          "prerequisites": [
+            "advanced_mining"
+          ]
+        }
+      ]
+    },
+    {
+      "skillId": "woodcutting",
+      "nodes": [
+        {
+          "id": "basic_woodcutting",
+          "abilityId": "woodcutting_efficiency_1",
+          "x": 0,
+          "y": 0,
+          "prerequisites": []
+        },
+        {
+          "id": "tree_feller",
+          "abilityId": "tree_feller_ability",
+          "x": 0,
+          "y": 1,
+          "prerequisites": [
+            "basic_woodcutting"
+          ]
+        },
+        {
+          "id": "leaf_blower",
+          "abilityId": "leaf_blower_ability",
+          "x": 1,
+          "y": 1,
+          "prerequisites": [
+            "basic_woodcutting"
+          ]
+        }
+      ]
+    }
+  ]
+}

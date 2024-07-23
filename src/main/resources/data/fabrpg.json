@@ -1,0 +1,14 @@
+{
+  "defaultLanguage": "en_us",
+  "forceLanguage": false,
+  "saveStatsTimer": 300,
+  "allowExplosions": true,
+  "allowBuild": true,
+  "allowPvP": true,
+  "allowHurtAnimals": true,
+  "maxLevel": 100,
+  "commands": {
+    "skill": "skill",
+    "skillTree": "skilltree"
+  }
+}

@@ -26,11 +26,11 @@ public class Fabrpg implements ModInitializer {
         // Initialize SkillManager
         SkillManager.initialize();
 
-        // Register server lifecycle events
-        registerServerEvents();
-
         // Register commands
         registerCommands();
+
+        // Register server lifecycle events
+        registerServerEvents();
 
         // Register skill event listeners
         registerSkillEvents();
@@ -44,12 +44,19 @@ public class Fabrpg implements ModInitializer {
     }
 
     private void onServerStarting(MinecraftServer server) {
-        // Perform any necessary actions when the server is starting
+        LOGGER.info("FabRPG is starting");
+        // Add any server start logic here if needed
     }
 
     private void onServerStopping(MinecraftServer server) {
-        // Perform any necessary cleanup when the server is stopping
-        ConfigManager.loadAll(); // This will save the config if needed
+        LOGGER.info("FabRPG: Saving Data...");
+
+        // Save all configurations
+        ConfigManager.saveAll();
+
+        // Add any additional cleanup or saving logic here if needed
+
+        LOGGER.info("FabRPG: Save Complete");
     }
 
     private void registerCommands() {

@@ -20,6 +20,11 @@ public class ConfigManager {
 
     public static void loadAll() {
         createConfigDirectory();
+        ensureConfigFile("main_config.json", getDefaultMainConfig());
+        ensureConfigFile("skills.json", getDefaultSkillsConfig());
+        ensureConfigFile("actions.json", getDefaultActionsConfig());
+        ensureConfigFile("abilities.json", getDefaultAbilitiesConfig());
+
         mainConfig = FabRPGConfig.load();
         skillsConfig = SkillsConfig.load();
         actionsConfig = ActionsConfig.load();
@@ -46,10 +51,27 @@ public class ConfigManager {
         if (!Files.exists(filePath)) {
             try {
                 Files.writeString(filePath, defaultContent);
+                Fabrpg.LOGGER.info("Created default config file: {}", fileName);
             } catch (IOException e) {
-                Fabrpg.LOGGER.error("Failed to create config file: " + fileName, e);
+                Fabrpg.LOGGER.error("Failed to create config file: {}", fileName, e);
             }
         }
+    }
+
+    private static String getDefaultMainConfig() {
+        return "{\n  \"defaultLanguage\": \"en_us\",\n  \"maxLevel\": 100\n}";
+    }
+
+    private static String getDefaultSkillsConfig() {
+        return "{\n  \"mining\": {\n    \"name\": \"Mining\",\n    \"maxLevel\": 100\n  },\n  \"combat\": {\n    \"name\": \"Combat\",\n    \"maxLevel\": 100\n  }\n}";
+    }
+
+    private static String getDefaultActionsConfig() {
+        return "[\n  {\n    \"id\": \"break_stone\",\n    \"type\": \"BLOCK_BREAK\",\n    \"blocks\": [\"STONE\"],\n    \"experience\": 10\n  }\n]";
+    }
+
+    private static String getDefaultAbilitiesConfig() {
+        return "[\n  {\n    \"id\": \"double_ore\",\n    \"name\": \"Double Ore\",\n    \"description\": \"Chance to double ore drops\"\n  }\n]";
     }
 
     public static Gson getGson() {

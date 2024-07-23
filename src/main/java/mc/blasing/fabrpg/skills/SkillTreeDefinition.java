@@ -1,4 +1,4 @@
-package mc.blasing.fabrpg.config;
+package mc.blasing.fabrpg.skills;
 
 import mc.blasing.fabrpg.skills.unlock.UnlockCondition;
 

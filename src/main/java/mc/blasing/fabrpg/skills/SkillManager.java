@@ -6,7 +6,8 @@ import com.google.gson.JsonObject;
 import mc.blasing.fabrpg.Fabrpg;
 import mc.blasing.fabrpg.skills.abilities.Ability;
 import mc.blasing.fabrpg.skills.actions.Action;
-import mc.blasing.fabrpg.skills.types.MiningSkill;
+import mc.blasing.fabrpg.skills.types.Mining;
+import mc.blasing.fabrpg.skills.types.Combat;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +26,7 @@ import java.util.Map;
 public class SkillManager {
     private static final Gson GSON = new Gson();
     private static final Map<String, SkillDefinition> skillDefinitions = new HashMap<>();
-    private static final Map<ServerPlayerEntity, Map<String, Skill>> playerSkills = new HashMap<>();
+    private static final Map<ServerPlayerEntity, Map<String, CustomSkill>> playerSkills = new HashMap<>();
     private static SkillTree clientSkillTree;
 
     public static void setClientSkillTree(SkillTree skillTree) {
@@ -39,6 +40,7 @@ public class SkillManager {
         }
         return clientSkillTree;
     }
+
     public static void initialize() {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
@@ -69,33 +71,30 @@ public class SkillManager {
         });
     }
 
-    public static Skill getOrCreateSkill(ServerPlayerEntity player, String skillId) {
+    public static CustomSkill getOrCreateSkill(ServerPlayerEntity player, String skillId) {
         return playerSkills
                 .computeIfAbsent(player, k -> new HashMap<>())
                 .computeIfAbsent(skillId, id -> createSkill(player, id));
     }
 
-    private static Skill createSkill(ServerPlayerEntity player, String skillId) {
+    private static CustomSkill createSkill(ServerPlayerEntity player, String skillId) {
         SkillDefinition def = skillDefinitions.get(skillId);
         if (def == null) {
             throw new IllegalArgumentException("Unknown skill: " + skillId);
         }
 
-        Skill skill;
-        switch (skillId) {
-            case "mining":
-                skill = new MiningSkill(def.getId(), def.getName(), player);
-                break;
+        CustomSkill skill = switch (skillId) {
+            case "mining" -> new Mining(def.getId(), def.getName(), player);
+            case "combat" -> new Combat(def.getId(), def.getName(), player);
             // Add cases for other specialized skills here
-            default:
-                skill = new CustomSkill(def.getId(), def.getName(), player);
-        }
+            default -> new CustomSkill(def.getId(), def.getName(), player);
+        };
 
         for (Action action : def.getActions()) {
-            ((CustomSkill) skill).addAction(action);
+            skill.addAction(action);
         }
         for (Ability ability : def.getAbilities()) {
-            ((CustomSkill) skill).addAbility(ability);
+            skill.addAbility(ability);
         }
 
         return skill;
@@ -108,31 +107,30 @@ public class SkillManager {
         Fabrpg.LOGGER.info("Loaded {} skill definitions", skillDefinitions.size());
     }
 
-    public static Skill createSkillForPlayer(String skillId, ServerPlayerEntity player) {
+    public static CustomSkill createSkillForPlayer(String skillId, ServerPlayerEntity player) {
         SkillDefinition def = skillDefinitions.get(skillId);
         if (def == null) {
             throw new IllegalArgumentException("Unknown skill: " + skillId);
         }
-        Skill skill = new Skill(def.getId(), def.getName(), player);
+        CustomSkill skill = new CustomSkill(def.getId(), def.getName(), player);
         for (Ability ability : def.getAbilities()) {
-            skill.addAbility(ability.getId(), ability);
+            skill.addAbility(ability);
         }
         for (Action action : def.getActions()) {
-            skill.addAction(action.getId(), action);
+            skill.addAction(action);
         }
         return skill;
     }
 
-    public static Map<String, Skill> getPlayerSkills(ServerPlayerEntity player) {
+    public static Map<String, CustomSkill> getPlayerSkills(ServerPlayerEntity player) {
         return new HashMap<>(playerSkills.getOrDefault(player, new HashMap<>()));
     }
 
     public static boolean isSkillUnlocked(PlayerEntity player, String skillId) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            Skill skill = getOrCreateSkill(serverPlayer, skillId);
+            CustomSkill skill = getOrCreateSkill(serverPlayer, skillId);
             return skill.getLevel() > 0; // Consider a skill unlocked if its level is greater than 0
         }
         return false;
     }
 }
-

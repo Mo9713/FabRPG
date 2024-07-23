@@ -1,6 +1,6 @@
 package mc.blasing.fabrpg.events;
 
-import mc.blasing.fabrpg.skills.types.CombatSkill;
+import mc.blasing.fabrpg.skills.types.Combat;
 import mc.blasing.fabrpg.skills.Skill;
 import mc.blasing.fabrpg.skills.SkillManager;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -27,8 +27,8 @@ public class SkillEvents {
                 LivingEntity target = (LivingEntity) entity;
 
                 if (target.getHealth() <= 0 || target.isDead()) {
-                    CombatSkill combatSkill = (CombatSkill) SkillManager.getOrCreateSkill(serverPlayer, "combat");
-                    combatSkill.handleEntityKill(entity.getType().toString());
+                    Combat combat = (Combat) SkillManager.getOrCreateSkill(serverPlayer, "combat");
+                    combat.handleEntityKill(entity.getType().toString());
                 }
             }
             return ActionResult.PASS;

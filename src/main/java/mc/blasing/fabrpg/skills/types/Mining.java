@@ -5,8 +5,8 @@ import mc.blasing.fabrpg.skills.CustomSkill;
 import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.Map;
 
-public class MiningSkill extends CustomSkill {
-    public MiningSkill(String id, String name, ServerPlayerEntity player) {
+public class Mining extends CustomSkill {
+    public Mining(String id, String name, ServerPlayerEntity player) {
         super(id, name, player);
     }
 

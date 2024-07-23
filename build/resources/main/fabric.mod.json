@@ -3,11 +3,10 @@
   "id": "fabrpg",
   "version": "1.0-SNAPSHOT",
   "name": "FabRPG",
-  "description": "A port of customjacks & AdvanceWipe original FreeRPG plugin - Made from Spite",
+  "description": "A fabric RPG mod",
   "authors": [
     "MoBlasing",
-    "JackCarlton",
-    "AdvancedWipe"
+    "JackCarlton"
   ],
   "contact": {},
   "license": "All-Rights-Reserved",
