@@ -3,12 +3,15 @@ package mc.blasing.fabrpg.events;
 import mc.blasing.fabrpg.skills.types.Combat;
 import mc.blasing.fabrpg.skills.Skill;
 import mc.blasing.fabrpg.skills.SkillManager;
+import mc.blasing.fabrpg.skills.types.Mining;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.block.Block;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.PickaxeItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,11 +43,19 @@ public class SkillEvents {
             if (player instanceof ServerPlayerEntity) {
                 ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
                 Block block = state.getBlock();
+                ItemStack tool = player.getMainHandStack();
 
                 Map<String, Object> context = new HashMap<>();
                 context.put("type", "BLOCK_BREAK");
                 context.put("block", block.getTranslationKey());
 
+                // Handle mining skill specifically
+                if (tool.getItem() instanceof PickaxeItem) {
+                    Mining miningSkill = (Mining) SkillManager.getOrCreateSkill(serverPlayer, "mining");
+                    miningSkill.onBlockMined(block, tool);
+                }
+
+                // Handle general skill actions
                 for (Skill skill : SkillManager.getPlayerSkills(serverPlayer).values()) {
                     skill.handleAction(context);
                 }

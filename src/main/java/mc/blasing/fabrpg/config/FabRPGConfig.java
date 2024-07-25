@@ -20,6 +20,7 @@ public class FabRPGConfig {
     // General settings
     public String defaultLanguage = "en_us";
     public boolean forceLanguage = false;
+    private boolean useMinecraftXP = true;
     public int saveStatsTimer = 300;
     public boolean allowExplosions = true;
     public boolean allowBuild = true;
@@ -29,6 +30,14 @@ public class FabRPGConfig {
 
     // Command customization
     public Map<String, String> commands = new HashMap<>();
+
+    public boolean isUseMinecraftXP() {
+        return useMinecraftXP;
+    }
+
+    public void setUseMinecraftXP(boolean useMinecraftXP) {
+        this.useMinecraftXP = useMinecraftXP;
+    }
 
     public static FabRPGConfig load() {
         FabRPGConfig config;

@@ -4,6 +4,7 @@ import mc.blasing.fabrpg.skills.abilities.Ability;
 import mc.blasing.fabrpg.skills.actions.Action;
 import mc.blasing.fabrpg.skills.experience.DefaultExperienceCalculator;
 import mc.blasing.fabrpg.skills.experience.ExperienceCalculator;
+import mc.blasing.fabrpg.config.ConfigManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.server.network.ServerPlayerEntity;
 import mc.blasing.fabrpg.Fabrpg;
@@ -38,15 +39,32 @@ public class Skill {
     }
 
     public void addExperience(int amount) {
-        experience += amount;
-        while (experience >= expCalculator.getExperienceForNextLevel(level)) {
-            levelUp();
+        if (ConfigManager.mainConfig.isUseMinecraftXP()) {
+            player.addExperience(amount);
+            checkLevelUp();
+        } else {
+            experience += amount;
+            while (experience >= expCalculator.getExperienceForNextLevel(level)) {
+                levelUp();
+            }
+        }
+    }
+
+    private void checkLevelUp() {
+        int newLevel = player.experienceLevel + 1;
+        if (newLevel > level) {
+            int levelsGained = newLevel - level;
+            for (int i = 0; i < levelsGained; i++) {
+                levelUp();
+            }
         }
     }
 
     private void levelUp() {
         level++;
-        experience -= expCalculator.getExperienceForNextLevel(level - 1);
+        if (!ConfigManager.mainConfig.isUseMinecraftXP()) {
+            experience -= expCalculator.getExperienceForNextLevel(level - 1);
+        }
         passiveTokens++;
         if (level % 100 == 0) {
             skillTokens++;
@@ -81,11 +99,31 @@ public class Skill {
         }
     }
 
+    public boolean spendSkillPoint() {
+        if (ConfigManager.mainConfig.isUseMinecraftXP()) {
+            if (player.experienceLevel > 0) {
+                player.addExperienceLevels(-1);
+                return true;
+            }
+            return false;
+        } else {
+            if (skillTokens > 0) {
+                skillTokens--;
+                return true;
+            }
+            return false;
+        }
+    }
+
     // Getters and setters
     public Identifier getId() { return id; }
     public String getName() { return name; }
-    public int getLevel() { return level; }
-    public int getExperience() { return experience; }
+    public int getLevel() {
+        return ConfigManager.mainConfig.isUseMinecraftXP() ? player.experienceLevel : level;
+    }
+    public int getExperience() {
+        return ConfigManager.mainConfig.isUseMinecraftXP() ? (int) player.experienceProgress : experience;
+    }
     public int getPassiveTokens() { return passiveTokens; }
     public int getSkillTokens() { return skillTokens; }
     public ServerPlayerEntity getPlayer() { return player; }

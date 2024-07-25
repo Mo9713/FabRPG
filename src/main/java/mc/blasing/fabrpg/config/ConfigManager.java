@@ -59,12 +59,15 @@ public class ConfigManager {
     }
 
     private static String getDefaultMainConfig() {
-        return "{\n  \"defaultLanguage\": \"en_us\",\n  \"maxLevel\": 100\n}";
+        return "{\n  \"defaultLanguage\": \"en_us\",\n  \"maxLevel\": 100,\n  \"useMinecraftXP\": true\n}";
+
     }
 
     public static String getDefaultSkillsConfig() {
-        return "{\n" +
-                "  \"skills\": {\n" +
+        return """
+                {
+                  "skills": {
+                """ +
                 "    \"mining\": {\n" +
                 "      \"id\": \"mining\",\n" +
                 "      \"name\": \"Mining\",\n" +
