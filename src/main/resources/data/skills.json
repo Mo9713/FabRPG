@@ -2,34 +2,8 @@
   "skills": {
     "mining": {
       "name": "Mining",
-      "actions": [
-        {
-          "id": "break_stone",
-          "type": "BLOCK_BREAK",
-          "blocks": ["STONE", "COBBLESTONE"],
-          "experience": 10
-        },
-        {
-          "id": "break_ore",
-          "type": "BLOCK_BREAK",
-          "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
-          "experience": 50
-        }
-      ],
-      "abilities": [
-        {
-          "id": "vein_miner",
-          "name": "Vein Miner",
-          "description": "Mine entire veins of ore at once",
-          "requiredLevel": 10,
-          "cooldown": 60,
-          "activation": {
-            "type": "BLOCK_BREAK",
-            "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
-            "toolTypes": ["PICKAXE"]
-          }
-        }
-      ]
+      "actions": ["break_stone", "break_ore"],
+      "abilities": ["vein_miner", "double_drop"]
     }
   }
 }

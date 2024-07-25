@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkillDefinition {
-    private String id;
-    private String name;
-    private List<Action> actions;
-    private List<Ability> abilities;
-    private List<UnlockCondition> unlockConditions;
+    public String id;
+    public String name;
+    public List<Action> actions;
+    public List<Ability> abilities;
+    public List<UnlockCondition> unlockConditions;
     public String description;
 
     public SkillDefinition(String id, String name, int maxLevel, String description) {

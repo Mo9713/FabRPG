@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Action {
-    private String id;
+    public String id;
     private String type;
     private List<String> blocks;
     private int experience;

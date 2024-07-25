@@ -20,7 +20,7 @@ public class ConfigManager {
 
     public static void loadAll() {
         createConfigDirectory();
-        ensureConfigFile("main_config.json", getDefaultMainConfig());
+        ensureConfigFile("fabrpg.json", getDefaultFabRPGConfig());
         ensureConfigFile("skills.json", getDefaultSkillsConfig());
         ensureConfigFile("actions.json", getDefaultActionsConfig());
         ensureConfigFile("abilities.json", getDefaultAbilitiesConfig());
@@ -58,42 +58,97 @@ public class ConfigManager {
         }
     }
 
-    private static String getDefaultMainConfig() {
-        return "{\n  \"defaultLanguage\": \"en_us\",\n  \"maxLevel\": 100,\n  \"useMinecraftXP\": true\n}";
-
+    private static String getDefaultFabRPGConfig() {
+        return """
+                {
+                  "defaultLanguage": "en_us",
+                  "forceLanguage": false,
+                  "saveStatsTimer": 300,
+                  "allowExplosions": true,
+                  "allowBuild": true,
+                  "allowPvP": true,
+                  "allowHurtAnimals": true,
+                  "maxLevel": 100,
+                  "commands": {
+                    "skill": "skill",
+                    "skillTree": "skilltree"
+                  },
+                  "useMinecraftXP": true
+                }
+                """;
     }
 
     public static String getDefaultSkillsConfig() {
         return """
                 {
                   "skills": {
-                """ +
-                "    \"mining\": {\n" +
-                "      \"id\": \"mining\",\n" +
-                "      \"name\": \"Mining\",\n" +
-                "      \"maxLevel\": 100,\n" +
-                "      \"description\": \"Increases mining speed and ore drops\",\n" +
-                "      \"actions\": [],\n" +
-                "      \"abilities\": []\n" +
-                "    },\n" +
-                "    \"woodcutting\": {\n" +
-                "      \"id\": \"woodcutting\",\n" +
-                "      \"name\": \"Woodcutting\",\n" +
-                "      \"maxLevel\": 100,\n" +
-                "      \"description\": \"Increases wood cutting speed and log drops\",\n" +
-                "      \"actions\": [],\n" +
-                "      \"abilities\": []\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+                    "mining": {
+                      "id": "mining",
+                      "name": "Mining",
+                      "description": "Increases mining speed and ore drops",
+                      "actions": ["break_stone", "break_ore"],
+                      "abilities": ["vein_miner", "double_drop"]
+                    },
+                    "woodcutting": {
+                      "id": "woodcutting",
+                      "name": "Woodcutting",
+                      "description": "Increases wood cutting speed and log drops",
+                      "actions": [],
+                      "abilities": []
+                    }
+                  }
+                }
+                """;
     }
 
     private static String getDefaultActionsConfig() {
-        return "[\n  {\n    \"id\": \"break_stone\",\n    \"type\": \"BLOCK_BREAK\",\n    \"blocks\": [\"STONE\"],\n    \"experience\": 10\n  }\n]";
+        return """
+                [
+                  {
+                    "id": "break_stone",
+                    "type": "BLOCK_BREAK",
+                    "blocks": ["STONE", "COBBLESTONE"],
+                    "experience": 10
+                  },
+                  {
+                    "id": "break_ore",
+                    "type": "BLOCK_BREAK",
+                    "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
+                    "experience": 50
+                  }
+                ]
+                """;
     }
 
     private static String getDefaultAbilitiesConfig() {
-        return "[\n  {\n    \"id\": \"double_ore\",\n    \"name\": \"Double Ore\",\n    \"description\": \"Chance to double ore drops\"\n  }\n]";
+        return """
+                [
+                  {
+                    "id": "vein_miner",
+                    "name": "Vein Miner",
+                    "description": "Mine entire veins of ore at once",
+                    "requiredLevel": 10,
+                    "cooldown": 60,
+                    "activation": {
+                      "type": "BLOCK_BREAK",
+                      "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
+                      "toolTypes": ["PICKAXE"]
+                    }
+                  },
+                  {
+                    "id": "double_drop",
+                    "name": "Double Drop",
+                    "description": "Chance to get double drops when mining ores",
+                    "requiredLevel": 15,
+                    "passive": true,
+                    "chanceFormula": "0.01 * level",
+                    "activation": {
+                      "type": "BLOCK_BREAK",
+                      "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"]
+                    }
+                  }
+                ]
+                """;
     }
 
     public static Gson getGson() {

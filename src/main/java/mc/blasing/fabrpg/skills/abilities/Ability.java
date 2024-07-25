@@ -5,7 +5,7 @@ import mc.blasing.fabrpg.skills.Skill;
 import java.util.Map;
 
 public class Ability {
-    private String id; public String getId() { return id; }
+    public String id; public String getId() { return id; }
     private String name; public String getName() { return name; }
     private String description; public String getDescription() { return description; }
     private int requiredLevel; public int getRequiredLevel() { return requiredLevel; }

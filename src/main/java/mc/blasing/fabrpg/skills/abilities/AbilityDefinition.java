@@ -1,12 +1,12 @@
 package mc.blasing.fabrpg.skills.abilities;
 
 public class AbilityDefinition {
-    private String id;
-    private String name;
-    private String description;
-    private int requiredLevel;
-    private int x;
-    private int y;
+    public String id;
+    public String name;
+    public String description;
+    public int requiredLevel;
+    public int x;
+    public int y;
 
     public AbilityDefinition(String id, String name, String description, int requiredLevel) {
         this.id = id;

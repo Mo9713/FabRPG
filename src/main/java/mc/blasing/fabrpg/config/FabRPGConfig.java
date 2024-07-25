@@ -29,6 +29,11 @@ public class FabRPGConfig {
     public int maxLevel = 100;
 
     // Command customization
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+
     public Map<String, String> commands = new HashMap<>();
 
     public boolean isUseMinecraftXP() {
