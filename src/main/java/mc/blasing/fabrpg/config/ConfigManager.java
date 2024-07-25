@@ -62,8 +62,27 @@ public class ConfigManager {
         return "{\n  \"defaultLanguage\": \"en_us\",\n  \"maxLevel\": 100\n}";
     }
 
-    private static String getDefaultSkillsConfig() {
-        return "{\n  \"mining\": {\n    \"name\": \"Mining\",\n    \"maxLevel\": 100\n  },\n  \"combat\": {\n    \"name\": \"Combat\",\n    \"maxLevel\": 100\n  }\n}";
+    public static String getDefaultSkillsConfig() {
+        return "{\n" +
+                "  \"skills\": {\n" +
+                "    \"mining\": {\n" +
+                "      \"id\": \"mining\",\n" +
+                "      \"name\": \"Mining\",\n" +
+                "      \"maxLevel\": 100,\n" +
+                "      \"description\": \"Increases mining speed and ore drops\",\n" +
+                "      \"actions\": [],\n" +
+                "      \"abilities\": []\n" +
+                "    },\n" +
+                "    \"woodcutting\": {\n" +
+                "      \"id\": \"woodcutting\",\n" +
+                "      \"name\": \"Woodcutting\",\n" +
+                "      \"maxLevel\": 100,\n" +
+                "      \"description\": \"Increases wood cutting speed and log drops\",\n" +
+                "      \"actions\": [],\n" +
+                "      \"abilities\": []\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
     }
 
     private static String getDefaultActionsConfig() {
