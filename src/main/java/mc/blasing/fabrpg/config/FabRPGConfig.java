@@ -20,19 +20,23 @@ public class FabRPGConfig {
     // General settings
     public String defaultLanguage = "en_us";
     public boolean forceLanguage = false;
-    private boolean useMinecraftXP = true;
+    public boolean useMinecraftXP = true;
+
     public int saveStatsTimer = 300;
+        public int getSaveStatsTimer() {
+        return saveStatsTimer;
+    }
     public boolean allowExplosions = true;
     public boolean allowBuild = true;
     public boolean allowPvP = true;
     public boolean allowHurtAnimals = true;
+
     public int maxLevel = 100;
-
-    // Command customization
-
-    public int getMaxLevel() {
+        public int getMaxLevel() {
         return maxLevel;
     }
+
+    // Command customization
 
     public Map<String, String> commands = new HashMap<>();
 

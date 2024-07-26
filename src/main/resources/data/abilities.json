@@ -7,7 +7,7 @@
       "requiredLevel": 10,
       "cooldown": 60,
       "activation": {
-        "type": "BLOCK_BREAK",
+        "type": "BREAK_BLOCK",
         "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
         "toolTypes": ["PICKAXE"]
       }
@@ -20,7 +20,7 @@
       "passive": true,
       "chanceFormula": "0.01 * level",
       "activation": {
-        "type": "BLOCK_BREAK",
+        "type": "BREAK_BLOCK",
         "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"]
       }
     },
@@ -31,7 +31,7 @@
       "requiredLevel": 15,
       "cooldown": 120,
       "activation": {
-        "type": "BLOCK_BREAK",
+        "type": "BREAK_BLOCK",
         "blocks": ["OAK_LOG", "BIRCH_LOG"],
         "toolTypes": ["AXE"]
       }

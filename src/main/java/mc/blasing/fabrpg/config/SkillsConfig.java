@@ -50,6 +50,9 @@ public class SkillsConfig {
             } catch (IOException e) {
                 Fabrpg.LOGGER.error("Error loading skills config file", e);
                 config.setDefaults();
+            } catch (JsonSyntaxException e) {
+                Fabrpg.LOGGER.error("JSON syntax error in skills config file", e);
+                config.setDefaults();
             }
         } else {
             config.setDefaults();
@@ -66,14 +69,16 @@ public class SkillsConfig {
 
     private static Map<String, SkillDefinition> parseSkillsFromJson(JsonObject skillsJson) {
         Map<String, SkillDefinition> skills = new HashMap<>();
+        int skillCount = 0;
         for (Map.Entry<String, JsonElement> entry : skillsJson.entrySet()) {
             String skillId = entry.getKey();
             JsonObject skillJson = entry.getValue().getAsJsonObject();
 
-            String name = skillJson.get("name").getAsString();
-            String description = skillJson.get("description").getAsString();
+            String name = skillJson.has("name") ? skillJson.get("name").getAsString() : skillId;
+            String description = skillJson.has("description") ? skillJson.get("description").getAsString() : "";
 
             SkillDefinition skill = new SkillDefinition(skillId, name, ConfigManager.mainConfig.getMaxLevel(), description);
+            skillCount++;
 
             if (skillJson.has("actions")) {
                 JsonArray actionsJson = skillJson.getAsJsonArray("actions");
@@ -96,8 +101,12 @@ public class SkillsConfig {
 
     private void setDefaults() {
         skills = new HashMap<>();
-        skills.put("mining", new SkillDefinition("mining", "Mining", ConfigManager.mainConfig.getMaxLevel(), "Increases mining speed and ore drops"));
-        skills.put("woodcutting", new SkillDefinition("woodcutting", "Woodcutting", ConfigManager.mainConfig.getMaxLevel(), "Increases wood cutting speed and log drops"));
+        SkillDefinition mining = new SkillDefinition("mining", "Mining", ConfigManager.mainConfig.getMaxLevel(), "Increases mining speed and ore drops");
+        mining.addAction(new Action("break_stone", "placeholder", new ArrayList<>(), 0, new ArrayList<>(), new ArrayList<>(), 0.0));
+        mining.addAction(new Action("break_ore", "placeholder", new ArrayList<>(), 0, new ArrayList<>(), new ArrayList<>(), 0.0));
+        mining.addAbility(new Ability("vein_miner", "placeholder", "placeholder", 0));
+        mining.addAbility(new Ability("double_drop", "placeholder", "placeholder", 0));
+        skills.put("mining", mining);
     }
 
     public void save() {

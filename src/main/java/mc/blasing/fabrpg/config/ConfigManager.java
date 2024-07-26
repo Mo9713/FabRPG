@@ -29,6 +29,8 @@ public class ConfigManager {
         skillsConfig = SkillsConfig.load();
         actionsConfig = ActionsConfig.load();
         abilitiesConfig = AbilitiesConfig.load();
+
+        ConfigValidator.validateConfigs();
     }
 
     public static void saveAll() {

@@ -3,6 +3,8 @@ package mc.blasing.fabrpg;
 import mc.blasing.fabrpg.commands.SkillTreeCommand;
 import mc.blasing.fabrpg.commands.SkillCommand;
 import mc.blasing.fabrpg.config.ConfigManager;
+import mc.blasing.fabrpg.config.ConfigValidator;
+import mc.blasing.fabrpg.skills.SkillDefinition;
 import mc.blasing.fabrpg.skills.SkillManager;
 import mc.blasing.fabrpg.events.SkillEventListener;
 import net.fabricmc.api.ModInitializer;
@@ -19,23 +21,43 @@ public class Fabrpg implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Initializing FabRPG");
+        try {
+            // Load configuration
+            ConfigManager.loadAll();
 
-        // Load configuration
-        ConfigManager.loadAll();
+            // Validate configurations
+            ConfigValidator.validateConfigs();
 
-        // Initialize SkillManager
-        SkillManager.initialize();
+            for (SkillDefinition skill : ConfigManager.skillsConfig.skills.values()) {
+                SkillManager.registerSkill(skill);
+            }
 
-        // Register commands
-        registerCommands();
+            Fabrpg.LOGGER.info("Registered {} skill definitions", ConfigManager.skillsConfig.skills.size());
 
-        // Register server lifecycle events
-        registerServerEvents();
+            if (ConfigValidator.hasErrors()) {
+                LOGGER.warn("FabRPG initialized with configuration errors. Some features may not work as expected.");
+                // Optionally disable certain features or take other actions
+            } else {
+                LOGGER.info("FabRPG configurations validated successfully.");
+            }
 
-        // Register skill event listeners
-        registerSkillEvents();
+            // Initialize SkillManager
+            SkillManager.initialize();
 
-        LOGGER.info("FabRPG initialization complete");
+            // Register commands
+            registerCommands();
+
+            // Register server lifecycle events
+            registerServerEvents();
+
+            // Register skill event listeners
+            registerSkillEvents();
+
+            LOGGER.info("FabRPG initialization complete");
+        } catch (Exception e) {
+            LOGGER.error("Failed to initialize FabRPG mod", e);
+            // Consider disabling the mod or specific features if initialization fails
+        }
     }
 
     private void registerServerEvents() {

@@ -3,7 +3,7 @@ package mc.blasing.fabrpg.skills.types;
 import mc.blasing.fabrpg.Fabrpg;
 import mc.blasing.fabrpg.config.ConfigManager;
 import mc.blasing.fabrpg.skills.CustomSkill;
-import mc.blasing.fabrpg.skills.abilities.AbilityDefinition;
+import mc.blasing.fabrpg.skills.abilities.Ability;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -18,11 +18,13 @@ import java.util.Random;
 
 public class Mining extends CustomSkill {
     private Map<Block, Integer> blockXpValues;
+    private Map<String, Ability> abilities;
     private static final Random random = new Random();
 
     public Mining(String id, String name, ServerPlayerEntity player) {
         super(id, name, player);
         initializeBlockXpValues();
+        initializeAbilities();
     }
 
     private void initializeBlockXpValues() {
@@ -32,6 +34,13 @@ public class Mining extends CustomSkill {
         blockXpValues.put(Blocks.IRON_ORE, 3);
         blockXpValues.put(Blocks.GOLD_ORE, 4);
         blockXpValues.put(Blocks.DIAMOND_ORE, 5);
+    }
+
+    private void initializeAbilities() {
+        abilities = new HashMap<>();
+        for (Ability ability : ConfigManager.abilitiesConfig.getAbilitiesForSkill("mining")) {
+            abilities.put(ability.getId(), ability);
+        }
     }
 
     public void onBlockMined(Block block, ItemStack tool) {
@@ -63,10 +72,10 @@ public class Mining extends CustomSkill {
     }
 
     public boolean canDoubleDrop(Block block) {
-        AbilityDefinition doubleDropAbility = findAbilityById("double_drop");
+        Ability doubleDropAbility = abilities.get("double_drop");
         if (doubleDropAbility == null) return false;
 
-        if (getLevel() < doubleDropAbility.requiredLevel) return false;
+        if (getLevel() < doubleDropAbility.getRequiredLevel()) return false;
 
         // For now, we'll use a simple chance calculation. You might want to adjust this.
         double chance = 0.01 * getLevel(); // 1% per level
@@ -80,10 +89,10 @@ public class Mining extends CustomSkill {
     }
 
     public void checkVeinMiner(Block block) {
-        AbilityDefinition veinMinerAbility = findAbilityById("vein_miner");
+        Ability veinMinerAbility = abilities.get("vein_miner");
         if (veinMinerAbility == null) return;
 
-        if (getLevel() < veinMinerAbility.requiredLevel) return;
+        if (getLevel() < veinMinerAbility.getRequiredLevel()) return;
 
         // For simplicity, we'll assume vein miner works on all ores.
         // You might want to add more specific logic here.
@@ -121,17 +130,7 @@ public class Mining extends CustomSkill {
         }
     }
 
-    private AbilityDefinition findAbilityById(String abilityId) {
-        for (AbilityDefinition ability : ConfigManager.abilitiesConfig.abilities) {
-            if (ability.id.equals(abilityId)) {
-                return ability;
-            }
-        }
-        return null;
-    }
-}
-
-    // SuperBreaker methods are commented out for now until i figure out enchantments
+    // SuperBreaker methods are commented out for now until you figure out enchantments
     /*
     public void activateSuperBreaker() {
         // Implementation
@@ -149,3 +148,4 @@ public class Mining extends CustomSkill {
         // Implementation
     }
     */
+}

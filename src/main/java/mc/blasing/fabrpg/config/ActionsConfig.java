@@ -3,21 +3,24 @@ package mc.blasing.fabrpg.config;
 import com.google.gson.reflect.TypeToken;
 import mc.blasing.fabrpg.Fabrpg;
 import mc.blasing.fabrpg.skills.actions.ActionDefinition;
-import mc.blasing.fabrpg.skills.actions.ActionManager;
+import mc.blasing.fabrpg.skills.actions.ActionFactory;
+import mc.blasing.fabrpg.skills.actions.Action;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ActionsConfig {
     private static final Path CONFIG_PATH = ConfigManager.getConfigDir().resolve("actions.json");
-    private List<ActionDefinition> actions;
+    public List<ActionDefinition> actions;
+    private Map<String, List<String>> skillToActionMap;
 
     public ActionsConfig() {
         this.actions = new ArrayList<>();
+        this.skillToActionMap = new HashMap<>();
     }
 
     public static ActionsConfig load() {
@@ -38,18 +41,22 @@ public class ActionsConfig {
             config.setDefaults();
         }
 
-        // Initialize ActionManager here
-        ActionManager.initialize(config.actions);
+        config.initializeSkillToActionMap();
 
         return config;
     }
 
     private void setDefaults() {
         actions.clear();
-        actions.add(new ActionDefinition("break_stone", "BLOCK_BREAK", List.of("STONE", "COBBLESTONE"), 10, List.of(), List.of(), 0.0));
-        actions.add(new ActionDefinition("break_ore", "BLOCK_BREAK", List.of("IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"), 50, List.of(), List.of(), 0.0));
+        actions.add(new ActionDefinition("break_stone", "BREAK_BLOCK", List.of("STONE", "COBBLESTONE"), 10, List.of(), List.of(), 0.0));
+        actions.add(new ActionDefinition("break_ore", "BREAK_BLOCK", List.of("IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"), 50, List.of(), List.of(), 0.0));
         actions.add(new ActionDefinition("touch_entity", "ENTITY_TOUCH", List.of(), 15, List.of("COW", "SHEEP"), List.of("BETTERNETHER_NAGA"), 10.0));
-        // Add more default actions as needed
+    }
+
+    private void initializeSkillToActionMap() {
+        // Load this from a config file or generate based on your game's logic
+        skillToActionMap.put("mining", List.of("break_stone", "break_ore"));
+        skillToActionMap.put("combat", List.of("touch_entity"));
     }
 
     public void save() {
@@ -65,7 +72,38 @@ public class ActionsConfig {
         return new ArrayList<>(actions);
     }
 
+    public List<Action> getActionsForSkill(String skillId) {
+        List<String> actionIds = skillToActionMap.getOrDefault(skillId, new ArrayList<>());
+        return actions.stream()
+                .filter(actionDef -> actionIds.contains(actionDef.getId()))
+                .map(ActionFactory::createAction)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
     private static String getDefaultActionsConfig() {
-        return "[\n  {\n    \"id\": \"break_stone\",\n    \"type\": \"BLOCK_BREAK\",\n    \"blocks\": [\"STONE\", \"COBBLESTONE\"],\n    \"experience\": 10\n  },\n  {\n    \"id\": \"break_ore\",\n    \"type\": \"BLOCK_BREAK\",\n    \"blocks\": [\"IRON_ORE\", \"GOLD_ORE\", \"DIAMOND_ORE\"],\n    \"experience\": 50\n  },\n  {\n    \"id\": \"touch_entity\",\n    \"type\": \"ENTITY_TOUCH\",\n    \"entities\": [\"COW\", \"SHEEP\"],\n    \"excludedEntities\": [\"BETTERNETHER_NAGA\"],\n    \"experience\": 15,\n    \"proximityThreshold\": 10.0\n  }\n]";
+        return """
+            [
+              {
+                "id": "break_stone",
+                "type": "BREAK_BLOCK",
+                "blocks": ["STONE", "COBBLESTONE"],
+                "experience": 10
+              },
+              {
+                "id": "break_ore",
+                "type": "BREAK_BLOCK",
+                "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
+                "experience": 50
+              },
+              {
+                "id": "touch_entity",
+                "type": "ENTITY_TOUCH",
+                "entities": ["COW", "SHEEP"],
+                "excludedEntities": ["BETTERNETHER_NAGA"],
+                "experience": 15,
+                "proximityThreshold": 10.0
+              }
+            ]""";
     }
 }

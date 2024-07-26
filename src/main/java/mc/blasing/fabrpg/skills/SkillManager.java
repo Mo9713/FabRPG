@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mc.blasing.fabrpg.Fabrpg;
+import mc.blasing.fabrpg.config.ConfigManager;
+import mc.blasing.fabrpg.config.AbilitiesConfig;
 import mc.blasing.fabrpg.skills.abilities.Ability;
 import mc.blasing.fabrpg.skills.actions.Action;
 import mc.blasing.fabrpg.skills.types.Mining;
@@ -28,17 +30,14 @@ public class SkillManager {
     private static final Map<String, SkillDefinition> skillDefinitions = new HashMap<>();
     private static final Map<ServerPlayerEntity, Map<String, CustomSkill>> playerSkills = new HashMap<>();
     private static SkillTree clientSkillTree;
+    private static final Map<String, SkillDefinition> registeredSkills = new HashMap<>();
 
-    public static void setClientSkillTree(SkillTree skillTree) {
-        clientSkillTree = skillTree;
+    public static void registerSkill(SkillDefinition skill) {
+        registeredSkills.put(skill.getId(), skill);
     }
 
-    public static SkillTree getClientSkillTree() {
-        if (clientSkillTree == null) {
-            // Initialize with a default skill tree if none has been set
-            clientSkillTree = new SkillTree("default");
-        }
-        return clientSkillTree;
+    public static int getRegisteredSkillCount() {
+        return registeredSkills.size();
     }
 
     public static void initialize() {
@@ -51,24 +50,62 @@ public class SkillManager {
             @Override
             public void reload(ResourceManager manager) {
                 skillDefinitions.clear();
-                try {
-                    for (Resource resource : manager.getAllResources(Identifier.of(Fabrpg.MOD_ID, "data/fabrpg/skills.json"))) {
-                        try (InputStream inputStream = resource.getInputStream()) {
-                            JsonObject jsonObject = GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);
-                            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-                                String skillId = entry.getKey();
-                                JsonObject skillObject = entry.getValue().getAsJsonObject();
-                                SkillDefinition skillDefinition = GSON.fromJson(skillObject, SkillDefinition.class);
-                                skillDefinitions.put(skillId, skillDefinition);
-                            }
-                        }
-                    }
-                    Fabrpg.LOGGER.info("Loaded {} skill definitions", skillDefinitions.size());
-                } catch (Exception e) {
-                    Fabrpg.LOGGER.error("Failed to load skill definitions", e);
-                }
+                loadSkillDefinitionsFromResources(manager);
             }
         });
+
+        loadSkills();
+    }
+
+    private static void loadSkillDefinitionsFromResources(ResourceManager manager) {
+        try {
+            for (Resource resource : manager.getAllResources(Identifier.of(Fabrpg.MOD_ID, "data/fabrpg/skills.json"))) {
+                try (InputStream inputStream = resource.getInputStream()) {
+                    JsonObject jsonObject = GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);
+                    for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+                        String skillId = entry.getKey();
+                        JsonObject skillObject = entry.getValue().getAsJsonObject();
+                        SkillDefinition skillDefinition = GSON.fromJson(skillObject, SkillDefinition.class);
+                        skillDefinitions.put(skillId, skillDefinition);
+                    }
+                }
+            }
+            Fabrpg.LOGGER.info("Loaded {} skill definitions from resources", skillDefinitions.size());
+        } catch (Exception e) {
+            Fabrpg.LOGGER.error("Failed to load skill definitions from resources", e);
+        }
+    }
+
+    public static void loadSkills() {
+        skillDefinitions.clear();
+        for (Map.Entry<String, SkillDefinition> entry : ConfigManager.skillsConfig.skills.entrySet()) {
+            String skillId = entry.getKey();
+            SkillDefinition skillDef = entry.getValue();
+            skillDefinitions.put(skillId, skillDef);
+
+            // Load actions for this skill
+            List<Action> actions = ConfigManager.actionsConfig.getActionsForSkill(skillId);
+            for (Action action : actions) {
+                skillDef.addAction(action);
+            }
+
+            // Load abilities for this skill
+            List<Ability> abilities = ConfigManager.abilitiesConfig.getAbilitiesForSkill(skillId);
+            for (Ability ability : abilities) {
+                skillDef.addAbility(ability);
+            }
+
+            registerSkill(skillDef);
+        }
+        Fabrpg.LOGGER.info("Loaded and registered {} skill definitions", getRegisteredSkillCount());
+    }
+
+    public static void loadSkillDefinitions(List<SkillDefinition> definitions) {
+        for (SkillDefinition definition : definitions) {
+            skillDefinitions.put(definition.getId(), definition);
+            registerSkill(definition);
+        }
+        Fabrpg.LOGGER.info("Loaded {} skill definitions", getRegisteredSkillCount());
     }
 
     public static CustomSkill getOrCreateSkill(ServerPlayerEntity player, String skillId) {
@@ -100,26 +137,16 @@ public class SkillManager {
         return skill;
     }
 
-    public static void loadSkillDefinitions(List<SkillDefinition> definitions) {
-        for (SkillDefinition definition : definitions) {
-            skillDefinitions.put(definition.getId(), definition);
-        }
-        Fabrpg.LOGGER.info("Loaded {} skill definitions", skillDefinitions.size());
+    public static void setClientSkillTree(SkillTree skillTree) {
+        clientSkillTree = skillTree;
     }
 
-    public static CustomSkill createSkillForPlayer(String skillId, ServerPlayerEntity player) {
-        SkillDefinition def = skillDefinitions.get(skillId);
-        if (def == null) {
-            throw new IllegalArgumentException("Unknown skill: " + skillId);
+    public static SkillTree getClientSkillTree() {
+        if (clientSkillTree == null) {
+            // Initialize with a default skill tree if none has been set
+            clientSkillTree = new SkillTree("default");
         }
-        CustomSkill skill = new CustomSkill(def.getId(), def.getName(), player);
-        for (Ability ability : def.getAbilities()) {
-            skill.addAbility(ability);
-        }
-        for (Action action : def.getActions()) {
-            skill.addAction(action);
-        }
-        return skill;
+        return clientSkillTree;
     }
 
     public static Map<String, CustomSkill> getPlayerSkills(ServerPlayerEntity player) {

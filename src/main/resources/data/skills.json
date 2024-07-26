@@ -2,8 +2,15 @@
   "skills": {
     "mining": {
       "name": "Mining",
+      "description": "Increases mining speed and ore drops",
       "actions": ["break_stone", "break_ore"],
       "abilities": ["vein_miner", "double_drop"]
+    },
+    "woodcutting": {
+      "name": "Woodcutting",
+      "description": "Increases woodcutting speed and log drops",
+      "actions": ["chop_tree"],
+      "abilities": ["tree_feller"]
     }
   }
 }
