@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FabRPG.iml" filepath="$PROJECT_DIR$/.idea/modules/FabRPG.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/FabRPG.client.iml" filepath="$PROJECT_DIR$/.idea/modules/FabRPG.client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/FabRPG.main.iml" filepath="$PROJECT_DIR$/.idea/modules/FabRPG.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/FabRPG.test.iml" filepath="$PROJECT_DIR$/.idea/modules/FabRPG.test.iml" />
