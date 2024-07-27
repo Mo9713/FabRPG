@@ -26,7 +26,7 @@ public class ActionsConfig {
     public static ActionsConfig load() {
         ActionsConfig config = new ActionsConfig();
 
-        ConfigManager.ensureConfigFile("actions.json", getDefaultActionsConfig());
+        ConfigManager.ensureConfigFile("actions.json", ConfigManager.getDefaultActionsConfig());
 
         if (Files.exists(CONFIG_PATH)) {
             try {
@@ -48,15 +48,22 @@ public class ActionsConfig {
 
     private void setDefaults() {
         actions.clear();
-        actions.add(new ActionDefinition("break_stone", "BREAK_BLOCK", List.of("STONE", "COBBLESTONE"), 10, List.of(), List.of(), 0.0));
-        actions.add(new ActionDefinition("break_ore", "BREAK_BLOCK", List.of("IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"), 50, List.of(), List.of(), 0.0));
-        actions.add(new ActionDefinition("touch_entity", "ENTITY_TOUCH", List.of(), 15, List.of("COW", "SHEEP"), List.of("BETTERNETHER_NAGA"), 10.0));
+        actions.add(new ActionDefinition("break_stone", "BREAK_BLOCK", 10));
+        actions.add(new ActionDefinition("break_ore", "BREAK_BLOCK", 50));
+        actions.add(new ActionDefinition("touch_entity", "ENTITY_TOUCH", 15));
+
+        // Set additional properties
+        actions.get(0).setBlocks(Arrays.asList("STONE", "COBBLESTONE"));
+        actions.get(1).setBlocks(Arrays.asList("IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"));
+        actions.get(2).setEntities(Arrays.asList("COW", "SHEEP"));
+        actions.get(2).setExcludedEntities(Arrays.asList("BETTERNETHER_NAGA"));
+        actions.get(2).setProximityThreshold(10.0);
     }
 
     private void initializeSkillToActionMap() {
         // Load this from a config file or generate based on your game's logic
-        skillToActionMap.put("mining", List.of("break_stone", "break_ore"));
-        skillToActionMap.put("combat", List.of("touch_entity"));
+        skillToActionMap.put("mining", Arrays.asList("break_stone", "break_ore"));
+        skillToActionMap.put("combat", Arrays.asList("touch_entity"));
     }
 
     public void save() {
@@ -79,31 +86,5 @@ public class ActionsConfig {
                 .map(ActionFactory::createAction)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }
-
-    private static String getDefaultActionsConfig() {
-        return """
-            [
-              {
-                "id": "break_stone",
-                "type": "BREAK_BLOCK",
-                "blocks": ["STONE", "COBBLESTONE"],
-                "experience": 10
-              },
-              {
-                "id": "break_ore",
-                "type": "BREAK_BLOCK",
-                "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
-                "experience": 50
-              },
-              {
-                "id": "touch_entity",
-                "type": "ENTITY_TOUCH",
-                "entities": ["COW", "SHEEP"],
-                "excludedEntities": ["BETTERNETHER_NAGA"],
-                "experience": 15,
-                "proximityThreshold": 10.0
-              }
-            ]""";
     }
 }

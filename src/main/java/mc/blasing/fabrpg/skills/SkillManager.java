@@ -86,16 +86,14 @@ public class SkillManager {
             // Load actions for this skill
             List<Action> actions = ConfigManager.actionsConfig.getActionsForSkill(skillId);
             for (Action action : actions) {
-                skillDef.addAction(action);
+                skillDef.addActionId(action.getId());
             }
 
             // Load abilities for this skill
             List<Ability> abilities = ConfigManager.abilitiesConfig.getAbilitiesForSkill(skillId);
             for (Ability ability : abilities) {
-                skillDef.addAbility(ability);
+                skillDef.addAbilityId(ability.getId());
             }
-
-            registerSkill(skillDef);
         }
         Fabrpg.LOGGER.info("Loaded and registered {} skill definitions", getRegisteredSkillCount());
     }
@@ -127,11 +125,23 @@ public class SkillManager {
             default -> new CustomSkill(def.getId(), def.getName(), player);
         };
 
-        for (Action action : def.getActions()) {
-            skill.addAction(action);
+        for (String actionId : def.getActionIds()) {
+            Action action = ConfigManager.actionsConfig.getActionsForSkill(skillId).stream()
+                    .filter(a -> a.getId().equals(actionId))
+                    .findFirst()
+                    .orElse(null);
+            if (action != null) {
+                skill.addAction(action);
+            }
         }
-        for (Ability ability : def.getAbilities()) {
-            skill.addAbility(ability);
+        for (String abilityId : def.getAbilityIds()) {
+            Ability ability = ConfigManager.abilitiesConfig.getAbilitiesForSkill(skillId).stream()
+                    .filter(a -> a.getId().equals(abilityId))
+                    .findFirst()
+                    .orElse(null);
+            if (ability != null) {
+                skill.addAbility(ability);
+            }
         }
 
         return skill;

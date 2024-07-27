@@ -25,6 +25,10 @@ public class CustomSkill extends Skill {
         abilities.put(ability.getId(), ability);
     }
 
+    public boolean hasAbility(String abilityId) {
+        return abilities.containsKey(abilityId);
+    }
+
     @Override
     public void handleAction(Map<String, Object> context) {
         String actionType = (String) context.get("type");

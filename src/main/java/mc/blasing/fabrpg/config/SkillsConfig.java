@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
@@ -47,11 +48,8 @@ public class SkillsConfig {
                     Fabrpg.LOGGER.error("Unexpected JSON structure in skills.json. Using default skills.");
                     config.setDefaults();
                 }
-            } catch (IOException e) {
+            } catch (IOException | JsonSyntaxException e) {
                 Fabrpg.LOGGER.error("Error loading skills config file", e);
-                config.setDefaults();
-            } catch (JsonSyntaxException e) {
-                Fabrpg.LOGGER.error("JSON syntax error in skills config file", e);
                 config.setDefaults();
             }
         } else {
@@ -69,7 +67,6 @@ public class SkillsConfig {
 
     private static Map<String, SkillDefinition> parseSkillsFromJson(JsonObject skillsJson) {
         Map<String, SkillDefinition> skills = new HashMap<>();
-        int skillCount = 0;
         for (Map.Entry<String, JsonElement> entry : skillsJson.entrySet()) {
             String skillId = entry.getKey();
             JsonObject skillJson = entry.getValue().getAsJsonObject();
@@ -77,21 +74,49 @@ public class SkillsConfig {
             String name = skillJson.has("name") ? skillJson.get("name").getAsString() : skillId;
             String description = skillJson.has("description") ? skillJson.get("description").getAsString() : "";
 
-            SkillDefinition skill = new SkillDefinition(skillId, name, ConfigManager.mainConfig.getMaxLevel(), description);
-            skillCount++;
+            SkillDefinition skill = new SkillDefinition(skillId, name, description);
+
+            if (skillJson.has("enabled")) {
+                skill.setEnabled(skillJson.get("enabled").getAsBoolean());
+            }
+            if (skillJson.has("maxLevel")) {
+                skill.setMaxLevel(skillJson.get("maxLevel").getAsInt());
+            }
+            if (skillJson.has("xpMultiplier")) {
+                skill.setXpMultiplier(skillJson.get("xpMultiplier").getAsDouble());
+            }
+            if (skillJson.has("xpCap")) {
+                skill.setXpCap(skillJson.get("xpCap").getAsInt());
+            }
+            if (skillJson.has("levelCap")) {
+                skill.setLevelCap(skillJson.get("levelCap").getAsInt());
+            }
 
             if (skillJson.has("actions")) {
                 JsonArray actionsJson = skillJson.getAsJsonArray("actions");
+                List<String> actions = new ArrayList<>();
                 for (JsonElement actionElement : actionsJson) {
-                    skill.addAction(new Action(actionElement.getAsString(), "placeholder", new ArrayList<>(), 0, new ArrayList<>(), new ArrayList<>(), 0.0));
+                    actions.add(actionElement.getAsString());
                 }
+                skill.setActionIds(actions);
             }
 
             if (skillJson.has("abilities")) {
                 JsonArray abilitiesJson = skillJson.getAsJsonArray("abilities");
+                List<String> abilities = new ArrayList<>();
                 for (JsonElement abilityElement : abilitiesJson) {
-                    skill.addAbility(new Ability(abilityElement.getAsString(), "placeholder", "placeholder", 0));
+                    abilities.add(abilityElement.getAsString());
                 }
+                skill.setAbilityIds(abilities);
+            }
+
+            if (skillJson.has("unlockConditions")) {
+                JsonArray unlockConditionsJson = skillJson.getAsJsonArray("unlockConditions");
+                List<String> unlockConditions = new ArrayList<>();
+                for (JsonElement conditionElement : unlockConditionsJson) {
+                    unlockConditions.add(conditionElement.getAsString());
+                }
+                skill.setUnlockConditions(unlockConditions);
             }
 
             skills.put(skillId, skill);
@@ -101,12 +126,15 @@ public class SkillsConfig {
 
     private void setDefaults() {
         skills = new HashMap<>();
-        SkillDefinition mining = new SkillDefinition("mining", "Mining", ConfigManager.mainConfig.getMaxLevel(), "Increases mining speed and ore drops");
-        mining.addAction(new Action("break_stone", "placeholder", new ArrayList<>(), 0, new ArrayList<>(), new ArrayList<>(), 0.0));
-        mining.addAction(new Action("break_ore", "placeholder", new ArrayList<>(), 0, new ArrayList<>(), new ArrayList<>(), 0.0));
-        mining.addAbility(new Ability("vein_miner", "placeholder", "placeholder", 0));
-        mining.addAbility(new Ability("double_drop", "placeholder", "placeholder", 0));
+        SkillDefinition mining = new SkillDefinition("mining", "Mining", "Increases mining speed and ore drops");
+        mining.getActionIds().add("break_stone");
+        mining.getActionIds().add("break_ore");
+        mining.getAbilityIds().add("vein_miner");
+        mining.getAbilityIds().add("double_drop");
         skills.put("mining", mining);
+
+        SkillDefinition woodcutting = new SkillDefinition("woodcutting", "Woodcutting", "Increases wood cutting speed and log drops");
+        skills.put("woodcutting", woodcutting);
     }
 
     public void save() {
@@ -127,21 +155,32 @@ public class SkillsConfig {
 
     private JsonObject skillToJson(SkillDefinition skill) {
         JsonObject skillJson = new JsonObject();
-        skillJson.addProperty("id", skill.id);
-        skillJson.addProperty("name", skill.name);
-        skillJson.addProperty("description", skill.description);
+        skillJson.addProperty("id", skill.getId());
+        skillJson.addProperty("name", skill.getName());
+        skillJson.addProperty("description", skill.getDescription());
+        skillJson.addProperty("enabled", skill.isEnabled());
+        skillJson.addProperty("maxLevel", skill.getMaxLevel());
+        skillJson.addProperty("xpMultiplier", skill.getXpMultiplier());
+        skillJson.addProperty("xpCap", skill.getXpCap());
+        skillJson.addProperty("levelCap", skill.getLevelCap());
 
         JsonArray actionsJson = new JsonArray();
-        for (Action action : skill.actions) {
-            actionsJson.add(action.id);
+        for (String action : skill.getActionIds()) {
+            actionsJson.add(action);
         }
         skillJson.add("actions", actionsJson);
 
         JsonArray abilitiesJson = new JsonArray();
-        for (Ability ability : skill.abilities) {
-            abilitiesJson.add(ability.id);
+        for (String ability : skill.getAbilityIds()) {
+            abilitiesJson.add(ability);
         }
         skillJson.add("abilities", abilitiesJson);
+
+        JsonArray unlockConditionsJson = new JsonArray();
+        for (String condition : skill.getUnlockConditions()) {
+            unlockConditionsJson.add(condition);
+        }
+        skillJson.add("unlockConditions", unlockConditionsJson);
 
         return skillJson;
     }

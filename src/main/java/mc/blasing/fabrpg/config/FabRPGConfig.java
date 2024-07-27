@@ -18,35 +18,47 @@ public class FabRPGConfig {
     private static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve("fabrpg");
 
     // General settings
-    public String defaultLanguage = "en_us";
-    public boolean forceLanguage = false;
-    public boolean useMinecraftXP = true;
+    private String defaultLanguage = "en_us";
+    private boolean forceLanguage = false;
+    private boolean useMinecraftXP = true;
+    private int saveStatsTimer = 300;
+    private boolean allowExplosions = true;
+    private boolean allowBuild = true;
+    private boolean allowPvP = true;
+    private boolean allowHurtAnimals = true;
+    private int maxLevel = 100;
+    private Map<String, String> commands = new HashMap<>();
 
-    public int saveStatsTimer = 300;
-        public int getSaveStatsTimer() {
-        return saveStatsTimer;
-    }
-    public boolean allowExplosions = true;
-    public boolean allowBuild = true;
-    public boolean allowPvP = true;
-    public boolean allowHurtAnimals = true;
+    // Getters and setters
+    public String getDefaultLanguage() { return defaultLanguage; }
+    public void setDefaultLanguage(String defaultLanguage) { this.defaultLanguage = defaultLanguage; }
 
-    public int maxLevel = 100;
-        public int getMaxLevel() {
-        return maxLevel;
-    }
+    public boolean isForceLanguage() { return forceLanguage; }
+    public void setForceLanguage(boolean forceLanguage) { this.forceLanguage = forceLanguage; }
 
-    // Command customization
+    public boolean isUseMinecraftXP() { return useMinecraftXP; }
+    public void setUseMinecraftXP(boolean useMinecraftXP) { this.useMinecraftXP = useMinecraftXP; }
 
-    public Map<String, String> commands = new HashMap<>();
+    public int getSaveStatsTimer() { return saveStatsTimer; }
+    public void setSaveStatsTimer(int saveStatsTimer) { this.saveStatsTimer = saveStatsTimer; }
 
-    public boolean isUseMinecraftXP() {
-        return useMinecraftXP;
-    }
+    public boolean isAllowExplosions() { return allowExplosions; }
+    public void setAllowExplosions(boolean allowExplosions) { this.allowExplosions = allowExplosions; }
 
-    public void setUseMinecraftXP(boolean useMinecraftXP) {
-        this.useMinecraftXP = useMinecraftXP;
-    }
+    public boolean isAllowBuild() { return allowBuild; }
+    public void setAllowBuild(boolean allowBuild) { this.allowBuild = allowBuild; }
+
+    public boolean isAllowPvP() { return allowPvP; }
+    public void setAllowPvP(boolean allowPvP) { this.allowPvP = allowPvP; }
+
+    public boolean isAllowHurtAnimals() { return allowHurtAnimals; }
+    public void setAllowHurtAnimals(boolean allowHurtAnimals) { this.allowHurtAnimals = allowHurtAnimals; }
+
+    public int getMaxLevel() { return maxLevel; }
+    public void setMaxLevel(int maxLevel) { this.maxLevel = maxLevel; }
+
+    public Map<String, String> getCommands() { return commands; }
+    public void setCommands(Map<String, String> commands) { this.commands = commands; }
 
     public static FabRPGConfig load() {
         FabRPGConfig config;

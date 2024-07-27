@@ -14,6 +14,17 @@ public class ActionManager {
                 actions.put(action.getId(), action);
             }
         }
+
+        // Add default break block actions if they don't exist in the config
+        addDefaultActionIfNotExists(BreakBlock.createStoneBreakBlock());
+        addDefaultActionIfNotExists(BreakBlock.createOreBreakBlock());
+        addDefaultActionIfNotExists(BreakBlock.createLogBreakBlock());
+    }
+
+    private static void addDefaultActionIfNotExists(Action action) {
+        if (!actions.containsKey(action.getId())) {
+            actions.put(action.getId(), action);
+        }
     }
 
     public static Action getAction(String id) {

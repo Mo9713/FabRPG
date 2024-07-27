@@ -60,7 +60,7 @@ public class ConfigManager {
         }
     }
 
-    private static String getDefaultFabRPGConfig() {
+    public static String getDefaultFabRPGConfig() {
         return """
                 {
                   "defaultLanguage": "en_us",
@@ -82,75 +82,92 @@ public class ConfigManager {
 
     public static String getDefaultSkillsConfig() {
         return """
+            {
+              "skills": {
+                "mining": {
+                  "name": "Mining",
+                  "description": "Increases mining speed and ore drops",
+                  "actions": ["break_stone", "break_ore"],
+                  "abilities": ["vein_miner", "double_drop"]
+                },
+                "woodcutting": {
+                  "name": "Woodcutting",
+                  "description": "Increases woodcutting speed and log drops",
+                  "actions": ["chop_tree"],
+                  "abilities": ["tree_feller"]
+                }
+              }
+            }""";
+    }
+
+    public static String getDefaultActionsConfig() {
+        return """
+            [
+              {
+                "id": "break_stone",
+                "type": "BREAK_BLOCK",
+                "blocks": ["STONE", "COBBLESTONE"],
+                "experience": 10
+              },
+              {
+                "id": "break_ore",
+                "type": "BREAK_BLOCK",
+                "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
+                "experience": 50
+              },
+              {
+                "id": "touch_entity",
+                "type": "ENTITY_TOUCH",
+                "entities": ["COW", "SHEEP"],
+                "excludedEntities": ["BETTERNETHER_NAGA"],
+                "experience": 15,
+                "proximityThreshold": 10.0
+              }
+            ]""";
+    }
+
+    public static String getDefaultAbilitiesConfig() {
+        return """
+            {
+              "abilities": [
                 {
-                  "skills": {
-                    "mining": {
-                      "id": "mining",
-                      "name": "Mining",
-                      "description": "Increases mining speed and ore drops",
-                      "actions": ["break_stone", "break_ore"],
-                      "abilities": ["vein_miner", "double_drop"]
-                    },
-                    "woodcutting": {
-                      "id": "woodcutting",
-                      "name": "Woodcutting",
-                      "description": "Increases wood cutting speed and log drops",
-                      "actions": [],
-                      "abilities": []
-                    }
+                  "id": "vein_miner",
+                  "name": "Vein Miner",
+                  "description": "Mine entire veins of ore at once",
+                  "requiredLevel": 10,
+                  "cooldown": 60,
+                  "activation": {
+                    "type": "BREAK_BLOCK",
+                    "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
+                    "toolTypes": ["PICKAXE"]
+                  }
+                },
+                {
+                  "id": "double_drop",
+                  "name": "Double Drop",
+                  "description": "Chance to get double drops when mining ores",
+                  "requiredLevel": 15,
+                  "passive": true,
+                  "chanceFormula": "0.01 * level",
+                  "activation": {
+                    "type": "BREAK_BLOCK",
+                    "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"]
+                  }
+                },
+                {
+                  "id": "tree_feller",
+                  "name": "Tree Feller",
+                  "description": "Cut down entire trees at once",
+                  "requiredLevel": 15,
+                  "cooldown": 120,
+                  "activation": {
+                    "type": "BREAK_BLOCK",
+                    "blocks": ["OAK_LOG", "BIRCH_LOG"],
+                    "toolTypes": ["AXE"]
                   }
                 }
-                """;
-    }
-
-    private static String getDefaultActionsConfig() {
-        return """
-                [
-                  {
-                    "id": "break_stone",
-                    "type": "BLOCK_BREAK",
-                    "blocks": ["STONE", "COBBLESTONE"],
-                    "experience": 10
-                  },
-                  {
-                    "id": "break_ore",
-                    "type": "BLOCK_BREAK",
-                    "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
-                    "experience": 50
-                  }
-                ]
-                """;
-    }
-
-    private static String getDefaultAbilitiesConfig() {
-        return """
-                [
-                  {
-                    "id": "vein_miner",
-                    "name": "Vein Miner",
-                    "description": "Mine entire veins of ore at once",
-                    "requiredLevel": 10,
-                    "cooldown": 60,
-                    "activation": {
-                      "type": "BLOCK_BREAK",
-                      "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
-                      "toolTypes": ["PICKAXE"]
-                    }
-                  },
-                  {
-                    "id": "double_drop",
-                    "name": "Double Drop",
-                    "description": "Chance to get double drops when mining ores",
-                    "requiredLevel": 15,
-                    "passive": true,
-                    "chanceFormula": "0.01 * level",
-                    "activation": {
-                      "type": "BLOCK_BREAK",
-                      "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"]
-                    }
-                  }
-                ]
-                """;
+              ]
+            }""";
     }
 
     public static Gson getGson() {

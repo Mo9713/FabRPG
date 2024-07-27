@@ -1,5 +1,5 @@
-[03:38:18] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.21 with Fabric Loader 0.16.0
-[03:38:18] [main/INFO] (FabricLoader) Loading 43 mods:
+[01:07:30] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.21 with Fabric Loader 0.16.0
+[01:07:30] [main/INFO] (FabricLoader) Loading 43 mods:
 	- fabric-api 0.100.7+1.21
 	- fabric-api-base 0.4.42+6573ed8cd1
 	- fabric-api-lookup-api-v1 1.6.67+b5597344d1
@@ -43,30 +43,54 @@
 	- java 21
 	- minecraft 1.21
 	- mixinextras 0.4.0
-[03:38:18] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/Users/mmbla/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.0+mixin.0.8.7/2ce1c5d57a061f3e259ec30b8b0cb2dc889c5156/sponge-mixin-0.15.0+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[03:38:19] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[03:38:19] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_21
-[03:38:19] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.0).
-[03:38:21] [main/WARN] (PerfmonDisabled) Invalid registry value type detected for PerfOS counters. Should be REG_DWORD. Ignoring: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfOS\Performance\Disable Performance Counters.
-[03:38:29] [main/INFO] (fabrpg) Initializing FabRPG
-[03:38:29] [main/INFO] (fabrpg) Skills JSON content: {
-  "woodcutting": {
-    "id": "woodcutting",
-    "name": "Woodcutting",
-    "actions": [],
-    "abilities": [],
-    "unlockConditions": [],
-    "description": "Increases wood cutting speed and log drops"
-  },
-  "mining": {
-    "id": "mining",
-    "name": "Mining",
-    "actions": [],
-    "abilities": [],
-    "unlockConditions": [],
-    "description": "Increases mining speed and ore drops"
+[01:07:30] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/Users/mmbla/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.0+mixin.0.8.7/2ce1c5d57a061f3e259ec30b8b0cb2dc889c5156/sponge-mixin-0.15.0+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[01:07:30] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[01:07:30] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[01:07:30] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_21
+[01:07:31] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.0).
+[01:07:32] [main/WARN] (PerfmonDisabled) Invalid registry value type detected for PerfOS counters. Should be REG_DWORD. Ignoring: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfOS\Performance\Disable Performance Counters.
+[01:07:40] [main/INFO] (fabrpg) Initializing FabRPG
+[01:07:40] [main/INFO] (fabrpg) Skills JSON content: {
+  "skills": {
+    "mining": {
+      "id": "mining",
+      "name": "Mining",
+      "description": "Increases mining speed and ore drops",
+      "enabled": true,
+      "maxLevel": 100,
+      "xpMultiplier": 1.0,
+      "xpCap": 0,
+      "levelCap": 0,
+      "actions": [
+        "break_stone",
+        "break_ore"
+      ],
+      "abilities": [
+        "double_drop",
+        "vein_miner"
+      ],
+      "unlockConditions": []
+    }
   }
 }
-[03:38:29] [main/INFO] (fabrpg) Skill trees not implemented yet. Skipping loading.
-[03:38:29] [main/INFO] (fabrpg) FabRPG initialization complete
-[03:38:30] [main/INFO] (Minecraft) You need to agree to the EULA in order to run the server. Go to eula.txt for more info.
+[01:07:40] [main/INFO] (fabrpg) Registered 1 skill definitions
+[01:07:40] [main/INFO] (fabrpg) FabRPG configurations validated successfully.
+[01:07:40] [main/INFO] (fabrpg) Loaded and registered 1 skill definitions
+[01:07:40] [main/INFO] (fabrpg) FabRPG initialization complete
+[01:07:40] [main/INFO] (Minecraft) Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[01:07:42] [main/INFO] (Minecraft) Loaded 1290 recipes
+[01:07:42] [main/INFO] (Minecraft) Loaded 1399 advancements
+[01:07:42] [main/INFO] (fabrpg) Loaded 0 skill definitions from resources
+[01:07:43] [main/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 1.653 ms
+[01:07:43] [Server thread/INFO] (fabrpg) FabRPG is starting
+[01:07:43] [Server thread/INFO] (Minecraft) Starting minecraft server version 1.21
+[01:07:43] [Server thread/INFO] (Minecraft) Loading properties
+[01:07:43] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
+[01:07:43] [Server thread/INFO] (Minecraft) Generating keypair
+[01:07:43] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
+[01:07:43] [Server thread/INFO] (Minecraft) Using default channel type
+[01:07:43] [Server thread/INFO] (Minecraft) Preparing level "world"
+[01:07:44] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[01:07:45] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
+[01:07:45] [Server thread/INFO] (Minecraft) Time elapsed: 499 ms
+[01:07:45] [Server thread/INFO] (Minecraft) Done (1.623s)! For help, type "help"

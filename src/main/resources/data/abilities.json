@@ -1,40 +1,31 @@
 {
   "abilities": [
     {
-      "id": "vein_miner",
-      "name": "Vein Miner",
-      "description": "Mine entire veins of ore at once",
-      "requiredLevel": 10,
-      "cooldown": 60,
-      "activation": {
-        "type": "BREAK_BLOCK",
-        "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"],
-        "toolTypes": ["PICKAXE"]
-      }
-    },
-    {
       "id": "double_drop",
       "name": "Double Drop",
-      "description": "Chance to get double drops when mining ores",
-      "requiredLevel": 15,
+      "description": "Doubles the drops from mining or woodcutting",
+      "skills": ["mining", "woodcutting"],
+      "requiredLevel": 1,
       "passive": true,
-      "chanceFormula": "0.01 * level",
-      "activation": {
-        "type": "BREAK_BLOCK",
-        "blocks": ["IRON_ORE", "GOLD_ORE", "DIAMOND_ORE"]
-      }
-    },
-    {
-      "id": "tree_feller",
-      "name": "Tree Feller",
-      "description": "Cut down entire trees at once",
-      "requiredLevel": 15,
-      "cooldown": 120,
-      "activation": {
-        "type": "BREAK_BLOCK",
-        "blocks": ["OAK_LOG", "BIRCH_LOG"],
-        "toolTypes": ["AXE"]
-      }
+      "activationType": "PASSIVE",
+      "allowedTools": ["pickaxe", "axe"],
+      "cooldown": 30,
+      "duration": 10,
+      "chanceFormula": "0.1 * level",
+      "messages": {
+        "start": "Ability activated!",
+        "end": "Ability ended."
+      },
+      "triggerCondition": {
+        "type": "BLOCK_BREAK",
+        "conditions": ["block_type:stone", "tool:pickaxe"]
+      },
+      "order": 1,
+      "maxBlocksBroken": 10,
+      "stackable": true,
+      "cancelable": false,
+      "consumeItem": "diamond",
+      "energyCost": 5
     }
   ]
 }
